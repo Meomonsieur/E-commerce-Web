@@ -88,5 +88,20 @@ const getPopularInWomen = async (req, res) => {
 };
 
 
+// Cập nhật sản phẩm
+const updateProduct = async (req, res) => {
+    try {
+      const { id, name, category, new_price, old_price } = req.body;
+      await Product.findOneAndUpdate(
+        { id: id },
+        { name, category, new_price, old_price }
+      );
+      res.json({ success: true, message: "Sản phẩm đã được cập nhật" });
+    } catch (error) {
+      res.status(500).json({ message: "Lỗi cập nhật sản phẩm", error });
+    }
+  };
+  
+
 // Xuất các hàm
-module.exports = { getAllProducts, addProduct, removeProduct, uploadProduct, getNewCollections, getPopularInWomen };
+module.exports = { getAllProducts, addProduct, removeProduct, uploadProduct, getNewCollections, getPopularInWomen,  updateProduct };
