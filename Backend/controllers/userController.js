@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const Order = require("../models/Order");
 
 const signup = async (req, res) => {
   try {
@@ -68,4 +69,23 @@ const removeFromCart = async (req, res) => {
   }
 };
 
-module.exports = { signup, login, getCart, addToCart, removeFromCart };
+const checkout = async (req, res) => {
+  try {
+    const { items, totalAmount } = req.body;
+    const userId = req.user.id;
+
+    const newOrder = new Order({
+      userId,
+      items,
+      totalAmount,
+    });
+
+    await newOrder.save();
+
+    res.json({ success: true, message: "Order placed successfully", order: newOrder });
+  } catch (error) {
+    res.status(500).json({ message: "Error placing order", error });
+  }
+};
+
+module.exports = { signup, login, getCart, addToCart, removeFromCart, checkout };
